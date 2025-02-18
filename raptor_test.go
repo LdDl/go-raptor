@@ -171,6 +171,44 @@ func TestSimpleRoute(t *testing.T) {
 				{Trip: "", Type: LEG_TYPE_WALKING, From: "B", To: "C", DepartureTime: 5, ArrivalTime: 104},
 			},
 		},
+		{
+			name: "Can't reach destination at all",
+			network: &TransitNetwork{
+				Stops: map[Stop]struct{}{"A": {}, "B": {}, "C": {}, "D": {}},
+				Routes: map[Route][]Stop{
+					"R1": {"A", "B"},
+					"R2": {"D", "A"},
+				},
+				Trips: map[Route]map[Trip]Schedule{
+					"R1": {
+						"T1": {
+							ArrivalTime: map[Stop]int{"A": 0, "B": 5},
+							// At "B" we have to wait 15 minutes before departing
+							DepartureTime: map[Stop]int{"A": 0, "B": 20},
+						},
+					},
+					"R2": {
+						"T42": {
+							ArrivalTime:   map[Stop]int{"D": 7, "A": 42},
+							DepartureTime: map[Stop]int{"D": 7, "A": 78},
+						},
+					},
+				},
+				FootPaths: map[Stop]map[Stop]int{
+					"B": {
+						"D": 1,
+					},
+				},
+			},
+			from:               "A",
+			to:                 "C",
+			departure:          0,
+			rounds:             10,
+			correctJourneyLegs: Journey{
+				// Should not be able to reach destination, but seems like result is:
+				// {Trip: "T1", Type: LEG_TYPE_TRANSIT, From: "A", To: "C", DepartureTime: 0, ArrivalTime: 0},
+			},
+		},
 	}
 
 	for _, tt := range tests {
