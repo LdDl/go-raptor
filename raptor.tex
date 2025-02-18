@@ -1,0 +1,94 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}  % Adjust margins
+\usepackage{indentfirst}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[utf8]{inputenc}
+% \usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+% Translate algorithm2e
+\SetKwFor{ForEach}{for each}{do}{end}
+\SetKwInput{KwData}{Input}
+% Reduce vertical spacing in algorithm
+\setlength{\algomargin}{5pt}
+\SetAlFnt{\small}
+\SetArgSty{text}
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage{enumitem}
+
+\begin{document}
+
+\begin{footnotesize}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \LinesNumbered
+        \DontPrintSemicolon  % Remove semicolons to save space
+        \KwData{Source stop: $p_s$; Target stop: $p_t$; Departure time: $\tau$}
+        \KwResult{ Journey }
+        \Begin{
+            // Initialization of the algorithm
+
+            \ForEach{$i$}{
+                $\tau_i(\cdot) \leftarrow \infty$\;
+            }
+            $\tau^*(\cdot) \leftarrow \infty$\;
+            $\tau_0(p_s) \leftarrow \tau$\;
+            mark $p_s$\;
+            \ForEach{$k = 1, 2, 3, ...$}{
+                // Accumulate routes serving marked\;
+                Clear $Q$\;
+                \ForEach{marked stop $p$}{
+                    \ForEach{route $r$ serving $p$}{
+                        \If{($r, p') \in Q$ for some stop $p'$}{
+                            Substitute ($r, p'$) by ($r, p$) in $Q$ if $p$ comes before $p'$ in $r$\;
+                        }
+                        \Else{
+                            Add ($r, p$) to $Q$\;
+                        }
+                    }
+                    unmark $p$\;
+                }
+                // Traverse each route\;
+                \ForEach{route ($r, p$) $\in Q$}{
+                    $t = \bot$ // the current trip\;
+                    \ForEach{stop $p_i$ of $r$ beginning with $p$}{
+                        // Can the label be improved in this round? Includes local and target pruning\;
+                        \If{$t \neq \bot$ and $arr(t, p_i) < \min\{\tau^*(p_i), \tau^*(p_t)\}$}{
+                            $\tau_k(p_i) \leftarrow \tau_{arr}(t, p_i)$\;
+                            $\tau^*(p_i) \leftarrow \tau_{arr}(t, p_i)$\;
+                            mark $p_i$\;
+                        }
+                        // Can we catch an earlier trip at $p_i$?
+
+                        \If{$\tau_{k-1}(p_i) \leq \tau_{dep}(t, p_i)$}{
+                            $t \leftarrow et(r, p_i)$\;
+                        }
+                    }
+                }
+                // Look at foot-paths\;
+                \ForEach{marked stop $p$}{
+                    \ForEach{foot-path ($p, p'$) $\in \mathcal{F}$}{
+                        $\tau_k(p') \leftarrow \min\{\tau_k(p'), \tau_k(p) + \lambda(p, p')\}$\;
+                        mark $p'$\;
+                    }
+                }
+                // Stopping criterion\;
+                \If{no stops are marked}{
+                    stop\;
+                }
+            }
+        }
+        \caption{RAPTOR}
+    \end{algorithm}
+\end{footnotesize}
+
+\end{document}
