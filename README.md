@@ -12,9 +12,9 @@ If you know how to implement some RAPTOR's extensions - you are welcomed to make
 ## How to use
 
 * Get the package:
-```shell
-go get github.com/lddl/go-raptor
-```
+    ```shell
+    go get github.com/lddl/go-raptor
+    ```
 
 * Example:
 @todo

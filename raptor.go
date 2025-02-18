@@ -70,8 +70,8 @@ func (r *RAPTOR) Run(ps, pt Stop, departureTime int, rounds int) {
 	}
 }
 
-// RunAndExtract is simply shorthand for running the algorithm and extracting the journey
-func (r *RAPTOR) RunAndExtract(ps, pt Stop, departureTime int, rounds int) Journey {
+// RunAndExtractJourney is simply shorthand for running the algorithm and extracting the journey
+func (r *RAPTOR) RunAndExtractJourney(ps, pt Stop, departureTime int, rounds int) Journey {
 	r.Run(ps, pt, departureTime, rounds)
 	return r.ExtractJourney(ps, pt)
 }
