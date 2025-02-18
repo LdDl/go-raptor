@@ -1,7 +1,5 @@
 package raptor
 
-import "fmt"
-
 // LegType as it stands its name represents the type of leg in a journey
 type LegType int
 
@@ -36,7 +34,6 @@ func (r *RAPTOR) ExtractJourney(source, target Stop) Journey {
 	currentStop := target
 	for currentStop != source {
 		label := r.TauStar[currentStop]
-		fmt.Println("label", label)
 		if label.BoardingStop == "" {
 			break
 		}
