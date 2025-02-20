@@ -44,9 +44,9 @@ func main() {
 	journey := algo.RunAndExtractJourney(origin, destination, departureTime, rounds)
 	for _, leg := range journey {
 		if leg.Type == raptor.LEG_TYPE_TRANSIT {
-			fmt.Printf("Take trip %s from %s to %s\n", leg.Trip, leg.From, leg.To)
+			fmt.Printf("Take trip %s from %s to %s. Departure at: %d\n", leg.Trip, leg.From, leg.To, leg.DepartureTime)
 			continue
 		}
-		fmt.Printf("Walk from %s to %s\n", leg.From, leg.To)
+		fmt.Printf("Walk from %s to %s. Departure at: %d\n", leg.From, leg.To, leg.DepartureTime)
 	}
 }
