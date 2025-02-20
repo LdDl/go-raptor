@@ -213,8 +213,8 @@ func TestSimpleRoute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			raptor := NewRAPTOR(tt.network)
-			journey := raptor.RunAndExtractJourney(tt.from, tt.to, tt.departure, tt.rounds)
+			algo := NewRAPTOR(tt.network)
+			journey := algo.RunAndExtractJourney(tt.from, tt.to, tt.departure, tt.rounds)
 			assert.Equal(t, len(tt.correctJourneyLegs), len(journey))
 			for i, leg := range journey {
 				assert.Equalf(t, tt.correctJourneyLegs[i], leg, "Incorrect journey leg at index %d", i)
