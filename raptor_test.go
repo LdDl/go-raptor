@@ -56,7 +56,7 @@ func TestSimpleRoute(t *testing.T) {
 			},
 		},
 		{
-			name: "Can use advantageous transfer via footpath due departure time",
+			name: "Can't use advantageous transfer via footpath due departure time",
 			network: &TransitNetwork{
 				Stops: map[Stop]struct{}{"A": {}, "B": {}, "C": {}, "D": {}},
 				Routes: map[Route][]Stop{
